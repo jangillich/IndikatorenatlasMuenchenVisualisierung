@@ -9,6 +9,7 @@ import codecs
 csv = "../csv/indikatorenatlas2014bevoelkerungauslaenderinnenanteil.csv"
 csv2 = "../csv/indikatorenatlas2014bevoelkerungeinpersonenhaushalte.csv"
 csv3 = "../csv/indikatorenatlas2014bevoelkerungmittlerelebenserwartung.csv"
+csv4 = "../csv/indikatorenatlas2014bevoelkerungeinwohnerdichte.csv"
 
 dtype = [('ap', '|S50'), ('value', '|S20'), ('jahr', '|S10'), ('id', '|S10'), ('name', '|S50')]
 np.set_printoptions(threshold=np.nan)
@@ -25,10 +26,14 @@ lebenserwartung = np.loadtxt(csv3, dtype=dtype, delimiter='","', comments='', us
 lebenserwartung = lebenserwartung[np.where(lebenserwartung["ap"] == 'weiblich-gesamt')]
 lebenserwartung = f.datasetPreprocessing(lebenserwartung)
 
-data = np.zeros((auslaender['id'].size,3))
+dichte = np.loadtxt(csv4, dtype=dtype, delimiter='","', comments='', usecols=(2,3,14,16,17), skiprows=0)
+dichte = f.datasetPreprocessing(dichte)
+
+data = np.zeros((auslaender['id'].size,4))
 data[:,0] = auslaender['value']
 data[:,1] = einpersonen['value']
 data[:,2] = lebenserwartung['value']
+data[:,3] = dichte['value']
 
 #zur kontrolle
 #newdtype = [('id1', '|S10'), ('jahr1', 'i2'), ('value1', 'f8'), ('id2', '|S10'), ('jahr2', 'i2'), ('value2', 'f8')]
@@ -44,6 +49,10 @@ print data
 print np.corrcoef(data[:,0], data[:,1])
 print np.corrcoef(data[:,1], data[:,2])
 print np.corrcoef(data[:,0], data[:,2])
+
+for col1 in xrange(0,data[0,:].size):
+	for col2 in xrange(0,data[0,:].size):
+		print "[{}|{}]: {}".format(col1,col2,np.corrcoef(data[:,col1], data[:,col2]))
 
 
 	
