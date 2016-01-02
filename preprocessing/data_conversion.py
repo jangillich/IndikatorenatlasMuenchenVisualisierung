@@ -10,6 +10,7 @@ csv = "../csv/indikatorenatlas2014bevoelkerungauslaenderinnenanteil.csv"
 csv2 = "../csv/indikatorenatlas2014bevoelkerungeinpersonenhaushalte.csv"
 csv3 = "../csv/indikatorenatlas2014bevoelkerungmittlerelebenserwartung.csv"
 csv4 = "../csv/indikatorenatlas2014bevoelkerungeinwohnerdichte.csv"
+csv5 = "../csv/indikatorenatlas2014arbeitsmarktarbeitslose.csv"
 
 dtype = [('ap', '|S50'), ('value', '|S20'), ('jahr', '|S10'), ('id', '|S10'), ('name', '|S50')]
 np.set_printoptions(threshold=np.nan)
@@ -29,11 +30,16 @@ lebenserwartung = f.datasetPreprocessing(lebenserwartung)
 dichte = np.loadtxt(csv4, dtype=dtype, delimiter='","', comments='', usecols=(2,3,14,16,17), skiprows=0)
 dichte = f.datasetPreprocessing(dichte)
 
-data = np.zeros((auslaender['id'].size,4))
+arbeitslosenquote = np.loadtxt(csv5, dtype=dtype, delimiter='","', comments='', usecols=(2,3,14,16,17), skiprows=0)
+arbeitslosenquote = arbeitslosenquote[np.where(arbeitslosenquote['ap'] == 'Vollzeitarbeitssuchende')]
+arbeitslosenquote = f.datasetPreprocessing(arbeitslosenquote)
+
+data = np.zeros((auslaender['id'].size,5))
 data[:,0] = auslaender['value']
 data[:,1] = einpersonen['value']
 data[:,2] = lebenserwartung['value']
 data[:,3] = dichte['value']
+data[:,4] = arbeitslosenquote['value']
 
 #zur kontrolle
 #newdtype = [('id1', '|S10'), ('jahr1', 'i2'), ('value1', 'f8'), ('id2', '|S10'), ('jahr2', 'i2'), ('value2', 'f8')]
@@ -45,10 +51,7 @@ data[:,3] = dichte['value']
 #new_struc['value1'] = auslaender['value']
 #new_struc['value2'] = einpersonen['value']
 
-print data
-print np.corrcoef(data[:,0], data[:,1])
-print np.corrcoef(data[:,1], data[:,2])
-print np.corrcoef(data[:,0], data[:,2])
+#print data
 
 for col1 in xrange(0,data[0,:].size):
 	for col2 in xrange(0,data[0,:].size):
