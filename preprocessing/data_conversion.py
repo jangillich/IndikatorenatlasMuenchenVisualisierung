@@ -12,6 +12,7 @@ csv3 = "../csv/indikatorenatlas2014bevoelkerungmittlerelebenserwartung.csv"
 csv4 = "../csv/indikatorenatlas2014bevoelkerungeinwohnerdichte.csv"
 csv5 = "../csv/indikatorenatlas2014arbeitsmarktarbeitslose.csv"
 csv6 = "../csv/indikatorenatlas2014bevoelkerungaltersdurchschnitt.csv"
+csv7 = "../csv/indikatorenatlas2014verkehrpersonenwagendichte.csv"
 
 dtype = [('ap', '|S50'), ('value', '|S20'), ('jahr', '|S10'), ('id', '|S10'), ('name', '|S50')]
 np.set_printoptions(threshold=np.nan)
@@ -38,13 +39,19 @@ alter = np.loadtxt(csv6, dtype=dtype, delimiter='","', comments='', usecols=(2,3
 alter = alter[np.where(alter['ap'] == 'gesamt')]
 alter = f.datasetPreprocessing(alter)
 
-data = np.zeros((auslaender['id'].size,6))
+pkws = np.loadtxt(csv7, dtype=dtype, delimiter='","', comments='', usecols=(2,3,14,16,17), skiprows=0)
+pkws = pkws[np.where(pkws['ap'] == 'privat')]
+pkws = f.datasetPreprocessing(pkws)
+
+data = np.zeros((auslaender['id'].size,7))
 data[:,0] = auslaender['value']
 data[:,1] = einpersonen['value']
 data[:,2] = lebenserwartung['value']
 data[:,3] = dichte['value']
 data[:,4] = arbeitslosenquote['value']
 data[:,5] = alter['value']
+data[:,6] = pkws['value']
+
 #zur kontrolle
 #newdtype = [('id1', '|S10'), ('jahr1', 'i2'), ('value1', 'f8'), ('id2', '|S10'), ('jahr2', 'i2'), ('value2', 'f8')]
 #new_struc = np.zeros(auslaender['id'].size, newdtype)
