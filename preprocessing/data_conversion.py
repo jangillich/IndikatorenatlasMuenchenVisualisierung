@@ -72,10 +72,8 @@ np.savetxt("./results/data.csv", struc, delimiter=",", fmt=formats, header=','.j
 #new_struc['value2'] = einpersonen['value']
 
 #print data
-
-for col1 in xrange(0,data[0,:].size):
-	for col2 in xrange(0,data[0,:].size):
-		pass#print "[{}|{}]: {}".format(col1,col2,np.corrcoef(data[:,col1], data[:,col2]))
+correlation = np.corrcoef(data, rowvar=0)
+np.savetxt("./results/correlation.csv", correlation, delimiter=",", fmt='%s')
 
 
 	
