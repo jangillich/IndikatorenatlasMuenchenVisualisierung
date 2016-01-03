@@ -10,7 +10,7 @@ csv = "../csv/indikatorenatlas2014bevoelkerungauslaenderinnenanteil.csv"
 csv2 = "../csv/indikatorenatlas2014bevoelkerungeinpersonenhaushalte.csv"
 csv3 = "../csv/indikatorenatlas2014bevoelkerungmittlerelebenserwartung.csv"
 csv4 = "../csv/indikatorenatlas2014bevoelkerungeinwohnerdichte.csv"
-csv5 = "../csv/indikatorenatlas2014arbeitsmarktarbeitslose.csv"
+csv5 = "../csv/indikatorenatlas2014arbeitsmarktarbeitslosendichte.csv"
 csv6 = "../csv/indikatorenatlas2014bevoelkerungaltersdurchschnitt.csv"
 csv7 = "../csv/indikatorenatlas2014verkehrpersonenwagendichte.csv"
 
@@ -32,7 +32,7 @@ dichte = np.loadtxt(csv4, dtype=dtype, delimiter='","', comments='', usecols=(2,
 dichte = f.datasetPreprocessing(dichte)
 
 arbeitslosenquote = np.loadtxt(csv5, dtype=dtype, delimiter='","', comments='', usecols=(2,3,14,16,17), skiprows=0)
-arbeitslosenquote = arbeitslosenquote[np.where(arbeitslosenquote['ap'] == 'Vollzeitarbeitssuchende')]
+arbeitslosenquote = arbeitslosenquote[np.where(arbeitslosenquote['ap'] == 'gesamt')]
 arbeitslosenquote = f.datasetPreprocessing(arbeitslosenquote)
 
 alter = np.loadtxt(csv6, dtype=dtype, delimiter='","', comments='', usecols=(2,3,14,16,17), skiprows=0)
@@ -52,6 +52,15 @@ data[:,4] = arbeitslosenquote['value']
 data[:,5] = alter['value']
 data[:,6] = pkws['value']
 
+struc = np.zeros((data[:,0].size, data[0,:].size + 2))
+struc[:,0] = alter['id']
+struc[:,1] = alter['jahr']
+struc[:,2:] = data
+
+names = ['id', 'jahr', 'auslaender', 'einpersonen', 'lebenserwartung', 'dichte', 'arbeitslosenquote', 'alter', 'pkws']
+formats = ['%i', '%i', '%s', '%s', '%s', '%s', '%s', '%s', '%s']
+np.savetxt("./results/data.csv", struc, delimiter=",", fmt=formats, header=','.join(names), comments='')
+
 #zur kontrolle
 #newdtype = [('id1', '|S10'), ('jahr1', 'i2'), ('value1', 'f8'), ('id2', '|S10'), ('jahr2', 'i2'), ('value2', 'f8')]
 #new_struc = np.zeros(auslaender['id'].size, newdtype)
@@ -62,11 +71,11 @@ data[:,6] = pkws['value']
 #new_struc['value1'] = auslaender['value']
 #new_struc['value2'] = einpersonen['value']
 
-print data
+#print data
 
 for col1 in xrange(0,data[0,:].size):
 	for col2 in xrange(0,data[0,:].size):
-		print "[{}|{}]: {}".format(col1,col2,np.corrcoef(data[:,col1], data[:,col2]))
+		pass#print "[{}|{}]: {}".format(col1,col2,np.corrcoef(data[:,col1], data[:,col2]))
 
 
 	
