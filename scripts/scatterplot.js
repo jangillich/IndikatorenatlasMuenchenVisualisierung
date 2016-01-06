@@ -56,8 +56,21 @@ function updateScatterplot(x,y){
 
 function updateGraph()
 {
-  svg.selectAll("*").remove();
-  drawGraph();
+  //svg.selectAll("*").remove();
+  //drawGraph();
+  xScale.domain([d3.min(theData, xValue)-0.5, d3.max(theData, xValue)+0.5]);
+  yScale.domain([d3.min(theData, yValue)-0.5, d3.max(theData, yValue)+0.5]);
+  var mySVG = d3.select("#scatterplot").transition();
+  mySVG.selectAll(".dot")
+      .duration(500)
+      .attr("cx", xMap)
+      .attr("cy", yMap);
+  mySVG.select(".x.axis") // change the x axis
+            .duration(1)
+            .call(xAxis);
+  mySVG.select(".y.axis") // change the y axis
+            .duration(1)
+            .call(yAxis);
 }
 
  
