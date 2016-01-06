@@ -13,22 +13,22 @@
       //iterate array and create dropdown links
 
       $(names).each(function(index, element){
-          var itemX = ('<li><a onclick="updateX(' + index +', \'' + element + '\')">'+element+'</a></li>');
-          var itemY = ('<li><a onclick="updateY(' + index +', \'' + element + '\')">'+element+'</a></li>');
+          var itemX = ('<li><a onclick="updateX(' + index +')">'+element+'</a></li>');
+          var itemY = ('<li><a onclick="updateY(' + index +')">'+element+'</a></li>');
           xData.append(itemX);
           yData.append(itemY);
 
       });
 });
 
-    function updateX(i, text){
+    function updateX(i){
       updateScatterplot(i, yIndex);
-      $("#dropdownMenuXData .dropdownLabel").html(text)
+      $("#dropdownMenuXData .dropdownLabel").html(names[i])
     }
 
-    function updateY(i, text){
+    function updateY(i){
       updateScatterplot(xIndex, i);
-      $("#dropdownMenuYData .dropdownLabel").html(text)
+      $("#dropdownMenuYData .dropdownLabel").html(names[i])
     }
   </script>
   <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css" />

@@ -113,6 +113,9 @@ d3.csv("preprocessing/results/correlation.csv", function(error, rows) {
           } else {
             return color(d.value);
           }
+        })
+        .on("click", function(d){
+          updateScatterplot(names.indexOf(d.x), names.indexOf(d.y))
         });
         
     var aS = d3.scale
