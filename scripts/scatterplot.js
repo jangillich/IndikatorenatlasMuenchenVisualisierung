@@ -1,4 +1,4 @@
-var margin = {top: 20, right: 20, bottom: 20, left: 200},
+var margin = {top: 50, right: 50, bottom: 50, left: 50},
     width = 500 - margin.left - margin.right,
     height = 500 - margin.top - margin.bottom;
 
@@ -37,11 +37,18 @@ var tooltip = d3.select("body").append("div")
     .attr("class", "tooltip")
     .style("opacity", 0);
 
-var xIndex = 2;
-var yIndex = 5;
+var xIndex = 0;
+var yIndex = 0;
 var theData;
 var names = ['auslaender', 'einpersonen', 'lebenserwartung', 'dichte', 'arbeitslosenquote', 'alter', 'pkws'];
-
+var axisDescriptions = [
+  'Ausländeranteil in %',
+  'Anteil Einpersonenhaushalte in %',
+  'Durschnittliche Lebenserwartung (Jahre)',
+  'Anzahl Einwohner/qkm',
+  'Arbeitslosenquote in %',
+  'Durschnittsalter (Jahre)',
+  'Private Kraftfahrzeugdichte'];
 d3.csv("preprocessing/results/data.csv", function(data){
   theData = data;
   drawGraph();
@@ -51,7 +58,8 @@ function updateScatterplot(x,y){
   xIndex = x;
   yIndex = y;
   updateGraph();
-  //drawGraph();
+  $("#dropdownMenuXData .dropdownLabel").html(names[xIndex]);
+  $("#dropdownMenuYData .dropdownLabel").html(names[yIndex]);
 }
 
 function updateGraph()
@@ -67,16 +75,19 @@ function updateGraph()
       .attr("cy", yMap);
   mySVG.select(".x.axis") // change the x axis
             .duration(1)
-            .call(xAxis);
+            .call(xAxis)
+            .select(".label")
+            .text(axisDescriptions[xIndex]);
   mySVG.select(".y.axis") // change the y axis
             .duration(1)
-            .call(yAxis);
+            .call(yAxis)
+            .select(".label")
+            .text(axisDescriptions[yIndex]);
 }
 
  
-//TODO: UPDATE GRAPH
 function drawGraph(){
-   xScale.domain([d3.min(theData, xValue)-0.5, d3.max(theData, xValue)+0.5]);
+  xScale.domain([d3.min(theData, xValue)-0.5, d3.max(theData, xValue)+0.5]);
   yScale.domain([d3.min(theData, yValue)-0.5, d3.max(theData, yValue)+0.5]);
 
   // x-axis
@@ -89,7 +100,7 @@ function drawGraph(){
       .attr("x", width)
       .attr("y", -6)
       .style("text-anchor", "end")
-      .text("Arbeitslosenquote");
+      .text(axisDescriptions[xIndex]);
 
   // y-axis
   svg.append("g")
@@ -101,7 +112,7 @@ function drawGraph(){
       .attr("y", 6)
       .attr("dy", ".71em")
       .style("text-anchor", "end")
-      .text("Frauenanteil in %");
+      .text(axisDescriptions[yIndex]);
 
   // draw dots
   svg.selectAll(".dot")
