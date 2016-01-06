@@ -1,7 +1,38 @@
 <!DOCTYPE html>
 <html>
 <meta charset="utf-8">
+<head>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+  <script src="http://d3js.org/d3.v3.min.js"></script>
+  <script src="bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript">
+    $(document).ready(function(){
+        var xData = $('#xDataSelect');
+        var yData = $('#yDataSelect');
 
+      //iterate array and create dropdown links
+
+      $(names).each(function(index, element){
+          var itemX = ('<li><a onclick="updateX(' + index +', \'' + element + '\')">'+element+'</a></li>');
+          var itemY = ('<li><a onclick="updateY(' + index +', \'' + element + '\')">'+element+'</a></li>');
+          xData.append(itemX);
+          yData.append(itemY);
+
+      });
+});
+
+    function updateX(i, text){
+      updateScatterplot(i, yIndex);
+      $("#dropdownMenuXData .dropdownLabel").html(text)
+    }
+
+    function updateY(i, text){
+      updateScatterplot(xIndex, i);
+      $("#dropdownMenuYData .dropdownLabel").html(text)
+    }
+  </script>
+  <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css" />
+</head>
 <style>
   body {
     font: 11px sans-serif;
@@ -24,21 +55,27 @@
     height: 28px;
     pointer-events: none;
   }
+
+  svg {
+      font: 12px sans-serif;
+      text-anchor: middle;
+    }
+    
+    rect {
+      stroke: lightgray;
+      stoke-width: 1px;
+      fill: none;
+    }
+    
+    .y.axis path{
+      fill: none;
+      stroke: none;
+    }
 </style>
 <body>
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-  <script src="http://d3js.org/d3.v3.min.js"></script>
-  <!-- Latest compiled and minified CSS -->
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
-
-  <!-- Optional theme -->
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
-
-  <!-- Latest compiled and minified JavaScript -->
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
 
 
-
+<div id="corrmat" style="float:left;"></div>
   <div id="scatterplot" style="float:left;"></div>
 
   <div class="dropdown" style="float:left;">
@@ -93,6 +130,26 @@
     </ul>
   </div>
 
+  <div class="dropdown" style="float:left;">
+    <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuXData" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+      <span class="dropdownLabel">x Data</span>
+      <span class="caret"></span>
+    </button>
+    <ul class="dropdown-menu" id="xDataSelect" aria-labelledby="dropdownMenuXData">
+    </ul>
+  </div>
+
+  <div class="dropdown" style="float:left;">
+    <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuYData" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+      <span class="dropdownLabel">y Data</span>
+      <span class="caret"></span>
+    </button>
+    <ul class="dropdown-menu" id="yDataSelect" aria-labelledby="dropdownMenuYData">
+    </ul>
+  </div>
+
   <script src="scripts/scatterplot.js"></script>
+  <script src="scripts/corrmat.js"></script>
+
 </body>
 </html>

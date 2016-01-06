@@ -10,19 +10,19 @@ var margin = {top: 20, right: 20, bottom: 20, left: 200},
  */ 
 
 // setup x 
-var xValue = function(d) { return parseFloat(d.aQuote.replace(',', '.'));}, // data -> value
+var xValue = function(d) { return parseFloat(d[names[xIndex]]);}, // data -> value
     xScale = d3.scale.linear().range([0, width]), // value -> display
     xMap = function(d) { return xScale(xValue(d));}, // data -> display
     xAxis = d3.svg.axis().scale(xScale).orient("bottom");
 
 // setup y
-var yValue = function(d) { return parseFloat(d.fQuote.replace(',', '.'));}, // data -> value
+var yValue = function(d) { return parseFloat(d[names[yIndex]]);}, // data -> value
     yScale = d3.scale.linear().range([height, 0]), // value -> display
     yMap = function(d) { return yScale(yValue(d));}, // data -> display
     yAxis = d3.svg.axis().scale(yScale).orient("left");
 
 // setup fill color
-var cValue = function(d) { return 1;},
+var cValue = function(d) { return d.jahr;},
     color = d3.scale.category10();
 
 // add the graph canvas to the body of the webpage
@@ -37,39 +37,52 @@ var tooltip = d3.select("body").append("div")
     .attr("class", "tooltip")
     .style("opacity", 0);
 
-function filterCSV(d){
-        if(d["INDIKATOR_AUSPRAEGUNG"] == "gesamt" 
-          && d["GLIEDERUNG"] == "Stadtbezirk"
-          && d["JAHR"] == 2012 
-          && d["NUMMER"] != "99")
-          return d;
+var xIndex = 2;
+var yIndex = 5;
+var theData;
+var names = ['auslaender', 'einpersonen', 'lebenserwartung', 'dichte', 'arbeitslosenquote', 'alter', 'pkws'];
+
+// d3.csv("https://www.opengov-muenchen.de/dataset/0771b22f-b1e7-4480-8fe5-d641c2586f3e/resource/55a1adb0-6c06-403b-ab7f-7e6c41d18e32/download/indikatorenatlas2014arbeitsmarktarbeitslosendichte.csv",
+//   function(data){
+//     arbeitslose = data.filter(filterCSV).sort(d3.ascending);
+//     d3.csv("https://www.opengov-muenchen.de/dataset/c0ef5f11-fa60-4f5f-95cb-90ae18c8f9a6/resource/f67b2cf6-a617-4ccb-8d56-65fe14a6426b/download/indikatorenatlas2014bevoelkerungfrauenanteil.csv",
+//       function(data2){
+//         frauen = data2.filter(filterCSV).sort(d3.ascending);
+//         theData = generateData();
+//         drawGraph();
+//     });
+//   });
+
+// function generateData(){
+//   var list = [];
+//   for(var i = 0; i < arbeitslose.length; i++){
+//     list.push({
+//           aQuote: arbeitslose[i]["INDIKATOR_WERT"],
+//           fQuote: frauen[i]["INDIKATOR_WERT"],
+//           bezirk: arbeitslose[i]["NAME"]
+//         });
+//   }
+//   return list;
+// }
+
+d3.csv("preprocessing/results/data.csv", function(data){
+  theData = data;
+  drawGraph();
+});
+
+function updateScatterplot(x,y){
+  xIndex = x;
+  yIndex = y;
+  updateGraph();
+  //drawGraph();
 }
 
-var arbeitslose;
-var frauen;
-var theData;
-
-d3.csv("https://www.opengov-muenchen.de/dataset/0771b22f-b1e7-4480-8fe5-d641c2586f3e/resource/55a1adb0-6c06-403b-ab7f-7e6c41d18e32/download/indikatorenatlas2014arbeitsmarktarbeitslosendichte.csv",
-  function(data){
-    arbeitslose = data.filter(filterCSV).sort(d3.ascending);
-    d3.csv("https://www.opengov-muenchen.de/dataset/c0ef5f11-fa60-4f5f-95cb-90ae18c8f9a6/resource/f67b2cf6-a617-4ccb-8d56-65fe14a6426b/download/indikatorenatlas2014bevoelkerungfrauenanteil.csv",
-      function(data2){
-        frauen = data2.filter(filterCSV).sort(d3.ascending);
-        theData = generateData();
-        drawGraph();
-    });
-  });
-
-function generateData(){
-  var list = [];
-  for(var i = 0; i < arbeitslose.length; i++){
-    list.push({
-          aQuote: arbeitslose[i]["INDIKATOR_WERT"],
-          fQuote: frauen[i]["INDIKATOR_WERT"],
-          bezirk: arbeitslose[i]["NAME"]
-        });
-  }
-  return list;
+function updateGraph()
+{
+  // draw dots
+  console.log(xMap)
+  svg.selectAll("*").remove();
+  drawGraph();
 }
 
  
@@ -115,7 +128,7 @@ function drawGraph(){
           tooltip.transition()
                .duration(200)
                .style("opacity", .9);
-          tooltip.html(d.bezirk + "<br/> (" + xValue(d) 
+          tooltip.html(d.id + ", " + d.jahr + "<br/> (" + xValue(d) 
           + ", " + yValue(d) + ")")
                .style("left", (d3.event.pageX + 5) + "px")
                .style("top", (d3.event.pageY - 28) + "px");
