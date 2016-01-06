@@ -28,7 +28,14 @@ d3.csv("preprocessing/results/correlation.csv", function(error, rows) {
         num = Math.sqrt(data.length),
         color = d3.scale.linear()
           .domain([-1, 0, 1])
-          .range(["#B22222", "#fff", "#000080"]);
+          .range(["#aa1111", "#eee", "#1111aa"]),
+        radScale = function(d){
+          d = d * d;
+          var s = d3.scale.linear()
+        .domain([0, 1])
+        .range([0.7, 1]);
+        return s(d);
+        };
 
       var x = d3.scale
         .ordinal()
@@ -97,7 +104,9 @@ d3.csv("preprocessing/results/correlation.csv", function(error, rows) {
           return false;
         })
         .append("circle")
-        .attr("r", (width / (num * 2) - 5))
+        .attr("r", function(d){
+          return (width / (num * 2) - 5) * radScale(d.value);
+        })
         .style("fill", function(d){
           if (d.value === 1) {
             return "#000";
