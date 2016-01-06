@@ -57,9 +57,11 @@ struc[:,0] = alter['id']
 struc[:,1] = alter['jahr']
 struc[:,2:] = data
 
-names = ['id', 'jahr', 'auslaender', 'einpersonen', 'lebenserwartung', 'dichte', 'arbeitslosenquote', 'alter', 'pkws']
+
+names = ['auslaender', 'einpersonen', 'lebenserwartung', 'dichte', 'arbeitslosenquote', 'alter', 'pkws']
+row_names = ['id', 'jahr'] + names;
 formats = ['%i', '%i', '%s', '%s', '%s', '%s', '%s', '%s', '%s']
-np.savetxt("./results/data.csv", struc, delimiter=",", fmt=formats, header=','.join(names), comments='')
+np.savetxt("./results/data.csv", struc, delimiter=",", fmt=formats, header=','.join(row_names), comments='')
 
 #zur kontrolle
 #newdtype = [('id1', '|S10'), ('jahr1', 'i2'), ('value1', 'f8'), ('id2', '|S10'), ('jahr2', 'i2'), ('value2', 'f8')]
@@ -73,7 +75,12 @@ np.savetxt("./results/data.csv", struc, delimiter=",", fmt=formats, header=','.j
 
 #print data
 correlation = np.corrcoef(data, rowvar=0)
-np.savetxt("./results/correlation.csv", correlation, delimiter=",", fmt='%s')
+named_correlation = np.zeros((correlation[0,:].size +1, correlation[:,0].size + 1), dtype=object)
+named_correlation[0,0] = "";
+named_correlation[0,1:] = names;
+named_correlation[1:,0] = names;
+named_correlation[1:,1:] = correlation;
+np.savetxt("./results/correlation.csv", named_correlation, delimiter=",", fmt='%s')
 
 
 	
