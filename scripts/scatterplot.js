@@ -1,6 +1,6 @@
-var margin = {top: 50, right: 50, bottom: 50, left: 50},
-    width = 500 - margin.left - margin.right,
-    height = 500 - margin.top - margin.bottom;
+var margin = {top: 60, right: 60, bottom: 60, left: 60},
+    width = 600 - margin.left - margin.right,
+    height = 600 - margin.top - margin.bottom;
 
 /* 
  * value accessor - returns the value to encode for a given data object.
@@ -66,8 +66,8 @@ function updateGraph()
 {
   //svg.selectAll("*").remove();
   //drawGraph();
-  xScale.domain([d3.min(theData, xValue)-0.5, d3.max(theData, xValue)+0.5]);
-  yScale.domain([d3.min(theData, yValue)-0.5, d3.max(theData, yValue)+0.5]);
+  xScale.domain([d3.min(theData, xValue) * 0.95, d3.max(theData, xValue) * 1.05]);
+  yScale.domain([d3.min(theData, yValue) * 0.95, d3.max(theData, yValue) * 1.05]);
   var mySVG = d3.select("#scatterplot").transition();
   mySVG.selectAll(".dot")
       .duration(500)

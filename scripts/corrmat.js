@@ -1,3 +1,5 @@
+var abbrevs = ['AA', 'EH', 'LE', 'ED', 'AQ', 'DA', 'PD'];
+
 d3.csv("preprocessing/results/correlation.csv", function(error, rows) {
       var data = [];
       rows.forEach(function(d) {
@@ -15,13 +17,13 @@ d3.csv("preprocessing/results/correlation.csv", function(error, rows) {
       });
 
       var margin = {
-          top: 50,
-          right: 50,
-          bottom: 50,
-          left: 50
+          top: 80,
+          right: 80,
+          bottom: 80,
+          left: 80
         },
-        width = 500 - margin.left - margin.right,
-        height = 500 - margin.top - margin.bottom,
+        width = 400 - margin.left - margin.right,
+        height = 400 - margin.top - margin.bottom,
         domain = d3.set(data.map(function(d) {
           return d.x
         })).values(),
@@ -82,7 +84,7 @@ d3.csv("preprocessing/results/correlation.csv", function(error, rows) {
         .attr("y", 5)
         .text(function(d) {
           if (d.x === d.y) {
-            return d.x;
+            return abbrevs[names.indexOf(d.x)];
           } else {
             return d.value.toFixed(2);
           }
@@ -120,29 +122,30 @@ d3.csv("preprocessing/results/correlation.csv", function(error, rows) {
         
     var aS = d3.scale
       .linear()
-      .range([-margin.top + 5, height + margin.bottom - 5])
-      .domain([1, -1]);
+      .range([0, width])
+      .domain([-1, 1]);
 
     var yA = d3.svg.axis()
-      .orient("right")
+      .orient("bottom")
       .scale(aS)
-      .tickPadding(7);
+      .ticks(5)
+      .tickPadding(5);
 
     var aG = svg.append("g")
       .attr("class", "y axis")
       .call(yA)
-      .attr("transform", "translate(" + (width + margin.right / 2) + " ,0)")
+      .attr("transform", "translate(0," + (height + margin.right / 2) + " )")
 
-    var iR = d3.range(-1, 1.01, 0.01);
-    var h = height / iR.length + 3;
+    var iR = d3.range(-1.01, 1.0, 0.01);
+    var w = width / iR.length + 1;
     iR.forEach(function(d){
         aG.append('rect')
           .style('fill',color(d))
           .style('stroke-width', 0)
           .style('stoke', 'none')
-          .attr('height', h)
-          .attr('width', 10)
-          .attr('x', 0)
-          .attr('y', aS(d))
+          .attr('height', 10)
+          .attr('width', w)
+          .attr('x', aS(d))
+          .attr('y', 0)
       });
     });
