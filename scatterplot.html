@@ -19,7 +19,30 @@
           yData.append(itemY);
 
       });
-});
+
+      for(var year in checkedYears){
+      element = '<li><div class="checkbox"><label><input class="year-checkbox" onclick="checkboxChecked(this);" type="checkbox" value="' 
+      + year + 
+      '" checked>' 
+      + year + '</label></div></li>';
+        $('#filterboxes').append(element);
+      }
+
+      $('#filter-toggle').on('click', function (event) {
+      $(this).parent().toggleClass('open');
+    });
+
+    $('body').on('click', function (e) {
+      if (!$('#filter-dropdown').is(e.target) 
+          && $('#filter-dropdown').has(e.target).length === 0 
+          && $('.open').has(e.target).length === 0
+      ) {
+          $('#filter-dropdown').removeClass('open');
+      }
+  });
+    });
+
+
 
     function updateX(i){
       updateScatterplot(i, yIndex);
@@ -28,6 +51,26 @@
     function updateY(i){
       updateScatterplot(xIndex, i);
     }
+
+    function checkboxChecked(e){
+        checkedYears[e.value] = $(e).is(':checked');
+        updateScatterplot(xIndex, yIndex);
+    }
+
+    function checkAll(){
+      for(var year in checkedYears){
+        checkedYears[year] = true;
+      }
+      $.each($(".year-checkbox"), function(index, checkbox){
+        console.log( checkbox);
+        checkbox.checked = true;
+      });
+      updateScatterplot(xIndex, yIndex);
+    }
+
+    
+
+
   </script>
   <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css" />
   <link rel="stylesheet" href="css/styles.css" />
@@ -77,55 +120,16 @@
 <div id="corrmat" style="float:left;"></div>
   <div id="scatterplot" style="float:left;"></div>
 
-  <div class="dropdown" style="float:left;">
-    <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+  <div id="filter-dropdown" class="dropdown" style="float:left;">
+    <a id="filter-toggle" class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" aria-haspopup="true" aria-expanded="true">
       Filter
       <span class="caret"></span>
-    </button>
-    <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-    <li><div class="checkbox">
-        <label>
-          <input type="checkbox" value="">
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="dropdownMenu1" id="filterboxes">
+    <li><a onclick="checkAll(this.checked)">
           Alle
-        </label>
-      </div></li>
+        </a></li>
       <li role="separator" class="divider"></li>
-      <li><div class="checkbox">
-        <label>
-          <input type="checkbox" value="2000">
-          2000
-        </label>
-      </div></li>
-      <li><div class="checkbox">
-        <label>
-          <input type="checkbox" value="2001">
-          2001
-        </label>
-      </div></li>
-      <li><div class="checkbox">
-        <label>
-          <input type="checkbox" value="2002">
-          2002
-        </label>
-      </div></li>
-      <li><div class="checkbox">
-        <label>
-          <input type="checkbox" value="2003">
-          2003
-        </label>
-      </div></li>
-      <li><div class="checkbox">
-        <label>
-          <input type="checkbox" value="2004">
-          2004
-        </label>
-      </div></li>
-      <li><div class="checkbox">
-        <label>
-          <input type="checkbox" value="2005">
-          2005
-        </label>
-      </div></li>
     </ul>
   </div>
 

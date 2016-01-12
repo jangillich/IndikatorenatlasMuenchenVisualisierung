@@ -40,6 +40,16 @@ var tooltip = d3.select("body").append("div")
 var xIndex = 0;
 var yIndex = 0;
 var theData;
+var checkedYears = {
+	"2002": true,
+	"2004": true,
+	"2005": true,
+	"2006": true,
+	"2007": true,
+	"2008": true,
+	"2009": true,
+	"2010": true,
+	"2011": true};
 var names = ['auslaender', 'einpersonen', 'lebenserwartung', 'dichte', 'arbeitslosenquote', 'alter', 'pkws'];
 var axisDescriptions = [
   'Ausländeranteil in %',
@@ -49,6 +59,7 @@ var axisDescriptions = [
   'Arbeitslosenquote in %',
   'Durschnittsalter (Jahre)',
   'Private Kraftfahrzeugdichte'];
+
 d3.csv("preprocessing/results/data.csv", function(data){
   theData = data;
   drawGraph();
@@ -72,7 +83,13 @@ function updateGraph()
   mySVG.selectAll(".dot")
       .duration(500)
       .attr("cx", xMap)
-      .attr("cy", yMap);
+      .attr("cy", yMap)
+      .attr("fill-opacity", function(d){
+      	if(checkedYears[d.jahr])
+      		return 1;
+      	else
+      		return 0; })
+      .attr("stroke-opacity", 0);
   mySVG.select(".x.axis") // change the x axis
             .duration(1)
             .call(xAxis)
