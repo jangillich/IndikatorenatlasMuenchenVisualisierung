@@ -1,4 +1,4 @@
-var margin = {top: 60, right: 60, bottom: 60, left: 60},
+var margin = {top: 10, right: 60, bottom: 60, left: 60},
     width = 600 - margin.left - margin.right,
     height = 600 - margin.top - margin.bottom;
 
@@ -63,6 +63,7 @@ var axisDescriptions = [
 d3.csv("preprocessing/results/data.csv", function(data){
   theData = data;
   drawGraph();
+  updateGraph();
 });
 
 function updateScatterplot(x,y){
@@ -88,8 +89,7 @@ function updateGraph()
       	if(checkedYears[d.jahr])
       		return 1;
       	else
-      		return 0; })
-      .attr("stroke-opacity", 0);
+      		return 0; });
   mySVG.select(".x.axis") // change the x axis
             .duration(1)
             .call(xAxis)
@@ -139,6 +139,7 @@ function drawGraph(){
       .attr("r", 3.5)
       .attr("cx", xMap)
       .attr("cy", yMap)
+      .attr("stroke-opacity", 0)
       .style("fill", function(d) { return color(cValue(d));}) 
       .on("mouseover", function(d) {
           tooltip.transition()
@@ -164,16 +165,16 @@ function drawGraph(){
 
   // draw legend colored rectangles
   legend.append("rect")
-      .attr("x", width - 18)
+      .attr("x", width + 6)
       .attr("width", 18)
       .attr("height", 18)
       .style("fill", color);
 
   // draw legend text
   legend.append("text")
-      .attr("x", width - 24)
+      .attr("x", width + 28)
       .attr("y", 9)
       .attr("dy", ".35em")
-      .style("text-anchor", "end")
+      .style("text-anchor", "start")
       .text(function(d) { return d;})
 }

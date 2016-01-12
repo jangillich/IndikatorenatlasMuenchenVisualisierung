@@ -1,158 +1,133 @@
 <!DOCTYPE html>
 <html>
 <meta charset="utf-8">
+
 <head>
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-  <script src="http://d3js.org/d3.v3.min.js"></script>
-  <script src="bootstrap/js/bootstrap.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="http://d3js.org/d3.v3.min.js"></script>
+    <script src="bootstrap/js/bootstrap.min.js"></script>
     <script type="text/javascript">
-    $(document).ready(function(){
+    $(document).ready(function() {
         var xData = $('#xDataSelect');
         var yData = $('#yDataSelect');
 
-      //iterate array and create dropdown links
+        //iterate array and create dropdown links
 
-      $(names).each(function(index, element){
-          var itemX = ('<li><a onclick="updateX(' + index +')">'+element+'</a></li>');
-          var itemY = ('<li><a onclick="updateY(' + index +')">'+element+'</a></li>');
-          xData.append(itemX);
-          yData.append(itemY);
+        $(names).each(function(index, element) {
+            var itemX = ('<li><a onclick="updateX(' + index + ')">' + element + '</a></li>');
+            var itemY = ('<li><a onclick="updateY(' + index + ')">' + element + '</a></li>');
+            xData.append(itemX);
+            yData.append(itemY);
 
-      });
+        });
 
-      for(var year in checkedYears){
-      element = '<li><div class="checkbox"><label><input class="year-checkbox" onclick="checkboxChecked(this);" type="checkbox" value="' 
-      + year + 
-      '" checked>' 
-      + year + '</label></div></li>';
-        $('#filterboxes').append(element);
-      }
+        for (var year in checkedYears) {
+            element = '<li><div class="checkbox"><label><input class="year-checkbox" onclick="checkboxChecked(this);" type="checkbox" value="' + year +
+                '" checked>' + year + '</label></div></li>';
+            $('#filterboxes').append(element);
+        }
 
-      $('#filter-toggle').on('click', function (event) {
-      $(this).parent().toggleClass('open');
-    });
+        $('#filter-toggle').on('click', function(event) {
+            $('#filter-dropdown').toggleClass('open');
+        });
 
-    $('body').on('click', function (e) {
-      if (!$('#filter-dropdown').is(e.target) 
-          && $('#filter-dropdown').has(e.target).length === 0 
-          && $('.open').has(e.target).length === 0
-      ) {
-          $('#filter-dropdown').removeClass('open');
-      }
-  });
+        $('body').on('click', function(e) {
+            if (!$('#filter-dropdown').is(e.target) && $('#filter-dropdown').has(e.target).length === 0 && $('.open').has(e.target).length === 0) {
+                $('#filter-dropdown').removeClass('open');
+            }
+        });
     });
 
 
 
-    function updateX(i){
-      updateScatterplot(i, yIndex);
+    function updateX(i) {
+        updateScatterplot(i, yIndex);
     }
 
-    function updateY(i){
-      updateScatterplot(xIndex, i);
+    function updateY(i) {
+        updateScatterplot(xIndex, i);
     }
 
-    function checkboxChecked(e){
+    function checkboxChecked(e) {
         checkedYears[e.value] = $(e).is(':checked');
         updateScatterplot(xIndex, yIndex);
     }
 
-    function checkAll(){
-      for(var year in checkedYears){
-        checkedYears[year] = true;
-      }
-      $.each($(".year-checkbox"), function(index, checkbox){
-        console.log( checkbox);
-        checkbox.checked = true;
-      });
-      updateScatterplot(xIndex, yIndex);
+    function checkAll() {
+        for (var year in checkedYears) {
+            checkedYears[year] = true;
+        }
+        $.each($(".year-checkbox"), function(index, checkbox) {
+            console.log(checkbox);
+            checkbox.checked = true;
+        });
+        updateScatterplot(xIndex, yIndex);
     }
-
-    
-
-
-  </script>
-  <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css" />
-  <link rel="stylesheet" href="css/styles.css" />
+    </script>
+    <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="css/styles.css" />
 </head>
-<style>
-  body {
-    font: 11px sans-serif;
-  }
 
-  .axis path,
-  .axis line {
-    fill: none;
-    stroke: #000;
-    shape-rendering: crispEdges;
-  }
-
-  .dot {
-    stroke: #000;
-  }
-
-  .tooltip {
-    position: absolute;
-    width: 200px;
-    height: 28px;
-    pointer-events: none;
-  }
-
-  svg {
-      font: 12px sans-serif;
-      text-anchor: middle;
-    }
-    
-    rect {
-      stroke: lightgray;
-      stoke-width: 1px;
-      fill: none;
-    }
-    
-    #corrmat .y.axis path{
-      fill: none;
-      stroke: none;
-    }
-</style>
 <body>
-
-
-<div id="corrmat" style="float:left;"></div>
-  <div id="scatterplot" style="float:left;"></div>
-
-  <div id="filter-dropdown" class="dropdown" style="float:left;">
-    <a id="filter-toggle" class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" aria-haspopup="true" aria-expanded="true">
+    <h3 style="text-align: center; margin-bottom: 2em;">Indikatorenatlas München Korrelationsvisualisierung</h3>
+    <div class="flex-container">
+        <div class="column-flex">
+            <div id="corrmat"></div>
+            <div>
+                <dl class="dl-horizontal">
+                    <dt>AA</dt>
+                    <dd>Ausländeranteil</dd>
+                    <dt>EH</dt>
+                    <dd>Einpersonenhaushalte</dd>
+                    <dt>LE</dt>
+                    <dd>Lebenserwartung</dd>
+                    <dt>ED</dt>
+                    <dd>Einwohnerdichte</dd>
+                    <dt>AQ</dt>
+                    <dd>Arbeitslosenquote</dd>
+                    <dt>DA</dt>
+                    <dd>Durschnittsalter</dd>
+                    <dt>PD</dt>
+                    <dd>Personenwagendichte</dd>
+                </dl>
+            </div>
+        </div>
+        <div class="column-flex">
+            <div class="scatterplot-flex">
+                <div class="dropdown" id="yDataDropdownContainer">
+                    <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuYData" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                        <span class="dropdownLabel">y Data</span>
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu" id="yDataSelect" aria-labelledby="dropdownMenuYData">
+                    </ul>
+                </div>
+                <div id="scatterplot"></div>
+                <div id="filter-dropdown" class="dropdown">
+                    <a id="filter-toggle" class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" aria-haspopup="true" aria-expanded="true">
       Filter
       <span class="caret"></span>
     </a>
-    <ul class="dropdown-menu" aria-labelledby="dropdownMenu1" id="filterboxes">
-    <li><a onclick="checkAll(this.checked)">
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenu1" id="filterboxes">
+                        <li><a onclick="checkAll(this.checked)">
           Alle
         </a></li>
-      <li role="separator" class="divider"></li>
-    </ul>
-  </div>
-
-  <div class="dropdown" style="float:left;">
-    <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuXData" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-      <span class="dropdownLabel">x Data</span>
-      <span class="caret"></span>
-    </button>
-    <ul class="dropdown-menu" id="xDataSelect" aria-labelledby="dropdownMenuXData">
-    </ul>
-  </div>
-
-  <div class="dropdown" style="float:left;">
-    <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuYData" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-      <span class="dropdownLabel">y Data</span>
-      <span class="caret"></span>
-    </button>
-    <ul class="dropdown-menu" id="yDataSelect" aria-labelledby="dropdownMenuYData">
-    </ul>
-  </div>
-
-  <script src="scripts/scatterplot.js"></script>
-  <script src="scripts/corrmat.js"></script>
-
+                        <li role="separator" class="divider"></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="dropup" id="xDataDropdownContainer">
+                <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuXData" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                    <span class="dropdownLabel">x Data</span>
+                    <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" id="xDataSelect" aria-labelledby="dropdownMenuXData">
+                </ul>
+            </div>
+        </div>
+    </div>
+    <script src="scripts/scatterplot.js"></script>
+    <script src="scripts/corrmat.js"></script>
 </body>
+
 </html>
