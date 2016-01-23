@@ -25,6 +25,13 @@ var yValue = function(d) { return parseFloat(d[names[yIndex]]);}, // data -> val
 var cValue = function(d) { return d.jahr;},
     color = d3.scale.category10();
 
+var dataTitle = function(d){
+          var t = idToName[d.id] + ', '+ d.jahr + "<br>" +
+           fullNames[xIndex] + ': ' + xValue(d) + "<br>" + 
+           fullNames[yIndex] + ': ' + yValue(d);
+           return t;
+        };
+
 // add the graph canvas to the body of the webpage
 var svg = d3.select("#scatterplot").append("svg")
     .attr("width", width + margin.left + margin.right)
@@ -34,44 +41,25 @@ var svg = d3.select("#scatterplot").append("svg")
 
 // add the tooltip area to the webpage
 var tooltip = d3.select("body").append("div")
-    .attr("class", "tooltip")
-    .style("opacity", 0);
+  .attr("class", "tooltip")
+  .style("opacity", 0);
 
 var xIndex = 0;
 var yIndex = 0;
 var theData;
-var checkedYears = {
-	"2002": true,
-	"2004": true,
-	"2005": true,
-	"2006": true,
-	"2007": true,
-	"2008": true,
-	"2009": true,
-	"2010": true,
-	"2011": true};
-var names = ['auslaender', 'einpersonen', 'lebenserwartung', 'dichte', 'arbeitslosenquote', 'alter', 'pkws'];
-var axisDescriptions = [
-  'Ausländeranteil in %',
-  'Anteil Einpersonenhaushalte in %',
-  'Durschnittliche Lebenserwartung (Jahre)',
-  'Anzahl Einwohner/qkm',
-  'Arbeitslosenquote in %',
-  'Durschnittsalter (Jahre)',
-  'Private Kraftfahrzeugdichte'];
 
 d3.csv("preprocessing/results/data.csv", function(data){
   theData = data;
   drawGraph();
-  updateGraph();
+  updateScatterplot(0,1);
 });
 
 function updateScatterplot(x,y){
   xIndex = x;
   yIndex = y;
   updateGraph();
-  $("#dropdownMenuXData .dropdownLabel").html(names[xIndex]);
-  $("#dropdownMenuYData .dropdownLabel").html(names[yIndex]);
+  $("#dropdownMenuXData .dropdownLabel").html(fullNames[xIndex]);
+  $("#dropdownMenuYData .dropdownLabel").html(fullNames[yIndex]);
 }
 
 function updateGraph()
@@ -85,6 +73,7 @@ function updateGraph()
       .duration(500)
       .attr("cx", xMap)
       .attr("cy", yMap)
+      .attr("title", dataTitle)
       .attr("fill-opacity", function(d){
       	if(checkedYears[d.jahr])
       		return 1;
@@ -140,20 +129,15 @@ function drawGraph(){
       .attr("cx", xMap)
       .attr("cy", yMap)
       .attr("stroke-opacity", 0)
+      .attr("title", dataTitle)
       .style("fill", function(d) { return color(cValue(d));}) 
       .on("mouseover", function(d) {
-          tooltip.transition()
-               .duration(200)
-               .style("opacity", .9);
-          tooltip.html(d.id + ", " + d.jahr + "<br/> (" + xValue(d) 
-          + ", " + yValue(d) + ")")
-               .style("left", (d3.event.pageX + 5) + "px")
-               .style("top", (d3.event.pageY - 28) + "px");
-      })
-      .on("mouseout", function(d) {
-          tooltip.transition()
-               .duration(500)
-               .style("opacity", 0);
+          $(this).tooltip({
+                      'container': 'body',
+                      'placement': 'top',
+                      'html': true
+                  });
+           $(this).tooltip('show');
       });
 
   // draw legend

@@ -13,7 +13,7 @@
 
         //iterate array and create dropdown links
 
-        $(names).each(function(index, element) {
+        $(fullNames).each(function(index, element) {
             var itemX = ('<li><a onclick="updateX(' + index + ')">' + element + '</a></li>');
             var itemY = ('<li><a onclick="updateY(' + index + ')">' + element + '</a></li>');
             xData.append(itemX);
@@ -22,7 +22,7 @@
         });
 
         for (var year in checkedYears) {
-            element = '<li><div class="checkbox"><label><input class="year-checkbox" onclick="checkboxChecked(this);" type="checkbox" value="' + year +
+            element = '<li class="list-group-item"><div class="checkbox"><label><input class="year-checkbox" onclick="checkboxChecked(this);" type="checkbox" value="' + year +
                 '" checked>' + year + '</label></div></li>';
             $('#filterboxes').append(element);
         }
@@ -69,12 +69,68 @@
 </head>
 
 <body>
-    <h3 style="text-align: center; margin-bottom: 2em;">Indikatorenatlas München Korrelationsvisualisierung</h3>
+<nav class="navbar navbar-default">
+  <div class="container-fluid">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand">Korrelationsvisualisierung <small>Indikatorenatlas München</small></a>
+    </div>
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse">
+      <ul class="nav navbar-nav">
+         
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="#">About</a></li>
+      </ul>
+    </div><!-- /.navbar-collapse -->
+  </div><!-- /.container-fluid -->
+</nav>
+    <!-- <h3 style="text-align: center; margin-bottom: 2em;">Indikatorenatlas München Korrelationsvisualisierung</h3> -->
     <div class="flex-container">
         <div class="column-flex">
-            <div id="corrmat"></div>
-            <div>
-                <dl class="dl-horizontal">
+        <div class="panel panel-default">
+    <div class="panel-heading" role="tab" id="headingOne">
+      <h4 class="panel-title">
+        <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+          Filter
+        </a>
+      </h4>
+    </div>
+    <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+      <ul id="filterboxes" class="list-group">
+                <li class="list-group-item"><a onclick="checkAll(this.checked)">Alle</a></li>
+            </ul>
+    </div>
+  </div>
+        <div class="panel panel-default axis-panel">
+        <div class="dropdown" id="xDataDropdownContainer">
+                X-Achse: <a class="dropdown-toggle" type="button" id="dropdownMenuXData" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                    <span class="dropdownLabel">x Data</span>
+                    <span class="caret"></span>
+                </a>
+                <ul class="dropdown-menu" id="xDataSelect" aria-labelledby="dropdownMenuXData">
+                </ul>
+            </div>
+            <div class="dropdown" id="yDataDropdownContainer">
+                    Y-Achse: <a class="dropdown-toggle" type="button" id="dropdownMenuYData" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                        <span class="dropdownLabel">y Data</span>
+                        <span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu" id="yDataSelect" aria-labelledby="dropdownMenuYData">
+                    </ul>
+                </div>
+                </div>
+            <div id="corrmat" class="panel panel-default"></div>
+<!--     <div class="panel panel-default">
+      <dl class="dl-horizontal">
                     <dt>AA</dt>
                     <dd>Ausländeranteil</dd>
                     <dt>EH</dt>
@@ -90,20 +146,23 @@
                     <dt>PD</dt>
                     <dd>Personenwagendichte</dd>
                 </dl>
-            </div>
+    </div> -->
         </div>
-        <div class="column-flex">
-            <div class="scatterplot-flex">
-                <div class="dropdown" id="yDataDropdownContainer">
-                    <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuYData" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                        <span class="dropdownLabel">y Data</span>
-                        <span class="caret"></span>
-                    </button>
-                    <ul class="dropdown-menu" id="yDataSelect" aria-labelledby="dropdownMenuYData">
-                    </ul>
-                </div>
+        <div class="scatterplot-flex">
+                
+                
                 <div id="scatterplot"></div>
-                <div id="filter-dropdown" class="dropdown">
+                
+            </div>
+    </div>
+    <script src="scripts/vars.js"></script>
+    <script src="scripts/scatterplot.js"></script>
+    <script src="scripts/corrmat.js"></script>
+    <script src="scripts/ui.js"></script>
+    <script type="text/javascript">
+    
+    </script>
+    <!-- <div id="filter-dropdown" class="dropdown">
                     <a id="filter-toggle" class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" aria-haspopup="true" aria-expanded="true">
       Filter
       <span class="caret"></span>
@@ -114,20 +173,8 @@
         </a></li>
                         <li role="separator" class="divider"></li>
                     </ul>
-                </div>
-            </div>
-            <div class="dropup" id="xDataDropdownContainer">
-                <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuXData" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                    <span class="dropdownLabel">x Data</span>
-                    <span class="caret"></span>
-                </button>
-                <ul class="dropdown-menu" id="xDataSelect" aria-labelledby="dropdownMenuXData">
-                </ul>
-            </div>
-        </div>
-    </div>
-    <script src="scripts/scatterplot.js"></script>
-    <script src="scripts/corrmat.js"></script>
+                </div> -->
+
 </body>
 
 </html>

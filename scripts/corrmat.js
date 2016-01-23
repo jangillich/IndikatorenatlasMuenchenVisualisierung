@@ -17,13 +17,13 @@ d3.csv("preprocessing/results/correlation.csv", function(error, rows) {
       });
 
       var margin = {
-          top: 80,
-          right: 80,
-          bottom: 80,
-          left: 80
+          top: 0,
+          right: 0,
+          bottom: 50,
+          left: 0
         },
-        width = 400 - margin.left - margin.right,
-        height = 400 - margin.top - margin.bottom,
+        width = 300 - margin.left - margin.right,
+        height = 350 - margin.top - margin.bottom,
         domain = d3.set(data.map(function(d) {
           return d.x
         })).values(),
@@ -39,16 +39,21 @@ d3.csv("preprocessing/results/correlation.csv", function(error, rows) {
         return s(d);
         };
 
+      var offsetX = width / (2.0 * domain.length);
+      var offsetY = height / (2.0 * domain.length);
       var x = d3.scale
         .ordinal()
-        .rangePoints([0, width])
+        .rangePoints([offsetX, width - offsetX])
         .domain(domain),
       y = d3.scale
         .ordinal()
-        .rangePoints([0, height])
+        .rangePoints([offsetY, height - offsetY])
         .domain(domain),
       xSpace = x.range()[1] - x.range()[0],
       ySpace = y.range()[1] - y.range()[0];
+
+      console.log(x);
+      console.log(y);
 
       var svg = d3.select("#corrmat")
         .append("svg")
@@ -63,7 +68,7 @@ d3.csv("preprocessing/results/correlation.csv", function(error, rows) {
         .append("g")
         .attr("class", "cor")
         .attr("transform", function(d) {
-          return "translate(" + x(d.x) + "," + y(d.y) + ")";
+          return "translate(" + (x(d.x) + 0 )+ "," + (y(d.y) + 0) + ")";
         });
         
       cor.append("rect")
@@ -95,6 +100,21 @@ d3.csv("preprocessing/results/correlation.csv", function(error, rows) {
           } else {
             return color(d.value);
           }
+        })
+        .attr("title", function(d) {
+          if (d.x === d.y) {
+            return fullNames[names.indexOf(d.x)];
+          } else {
+            return d.value.toFixed(2);
+          }
+        })
+        .on("mouseover", function(d) {
+                $(this).tooltip({
+                    'container': 'body',
+                    'placement': 'top',
+                    'html': true
+                });
+                 $(this).tooltip('show')
         });
 
         cor.filter(function(d){
@@ -109,6 +129,11 @@ d3.csv("preprocessing/results/correlation.csv", function(error, rows) {
         .attr("r", function(d){
           return (width / (num * 2) - 5) * radScale(d.value);
         })
+        .attr("title", function(d){
+          var ypos = domain.indexOf(d.y);
+          var xpos = domain.indexOf(d.x);
+          return fullNames[xpos] + "<br>" + fullNames[ypos];
+        })
         .style("fill", function(d){
           if (d.value === 1) {
             return "#000";
@@ -118,11 +143,25 @@ d3.csv("preprocessing/results/correlation.csv", function(error, rows) {
         })
         .on("click", function(d){
           updateScatterplot(names.indexOf(d.x), names.indexOf(d.y))
-        });
+        })
+        .on("mouseover", function(d) {
+                this.style.strokeWidth = 3;
+                this.style.stroke = "#333";
+               
+                $(this).tooltip({
+                    'container': 'body',
+                    'placement': 'top',
+                    'html': true
+                });
+                 $(this).tooltip('show');
+      })
+      .on("mouseout", function(d) {
+                this.style.strokeWidth = 0;
+      });;
         
     var aS = d3.scale
       .linear()
-      .range([0, width])
+      .range([offsetX, width - offsetX])
       .domain([-1, 1]);
 
     var yA = d3.svg.axis()
@@ -134,7 +173,7 @@ d3.csv("preprocessing/results/correlation.csv", function(error, rows) {
     var aG = svg.append("g")
       .attr("class", "y axis")
       .call(yA)
-      .attr("transform", "translate(0," + (height + margin.right / 2) + " )")
+      .attr("transform", "translate(0," + (height + margin.bottom / 2) + " )")
 
     var iR = d3.range(-1.01, 1.0, 0.01);
     var w = width / iR.length + 1;
