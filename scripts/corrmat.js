@@ -30,7 +30,7 @@ d3.csv("preprocessing/results/correlation.csv", function(error, rows) {
         num = Math.sqrt(data.length),
         color = d3.scale.linear()
           .domain([-1, 0, 1])
-          .range(["#aa1111", "#eee", "#1111aa"]),
+          .range(["#c0392b", "#ecf0f1", "#2980b9"]),
         radScale = function(d){
           d = d * d;
           var s = d3.scale.linear()
@@ -175,8 +175,8 @@ d3.csv("preprocessing/results/correlation.csv", function(error, rows) {
       .call(yA)
       .attr("transform", "translate(0," + (height + margin.bottom / 2) + " )")
 
-    var iR = d3.range(-1.01, 1.0, 0.01);
-    var w = width / iR.length + 1;
+    var iR = d3.range(-1.01, 1.0, 0.1);
+    var w = (width-2*offsetX) / iR.length + 1;
     iR.forEach(function(d){
         aG.append('rect')
           .style('fill',color(d))

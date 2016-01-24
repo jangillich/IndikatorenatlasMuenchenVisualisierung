@@ -88,7 +88,7 @@
          
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        <li><a href="#">About</a></li>
+        <li><a href="#" data-toggle="modal" data-target="#myModal">About</a></li>
       </ul>
     </div><!-- /.navbar-collapse -->
   </div><!-- /.container-fluid -->
@@ -155,13 +155,34 @@
                 
             </div>
     </div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Korrelationsvisualisierung</h4>
+      </div>
+      <div class="modal-body text-center">
+        Projektarbeit zur Vorlesung Informationsvisualisierung<br>
+        LMU München, WS15/16<br>
+        von
+        <p class="lead">
+        Roman Schader &amp; Jan Gillich
+        </p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-dismiss="modal">Ok</button>
+      </div>
+    </div>
+  </div>
+</div>
     <script src="scripts/vars.js"></script>
     <script src="scripts/scatterplot.js"></script>
     <script src="scripts/corrmat.js"></script>
     <script src="scripts/ui.js"></script>
-    <script type="text/javascript">
-    
-    </script>
     <!-- <div id="filter-dropdown" class="dropdown">
                     <a id="filter-toggle" class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" aria-haspopup="true" aria-expanded="true">
       Filter

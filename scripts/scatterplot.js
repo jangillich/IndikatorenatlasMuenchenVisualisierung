@@ -23,7 +23,8 @@ var yValue = function(d) { return parseFloat(d[names[yIndex]]);}, // data -> val
 
 // setup fill color
 var cValue = function(d) { return d.jahr;},
-    color = d3.scale.category10();
+    color = d3.scale.ordinal()
+  .range(["#16a085", "#2cc36b" , "#2980b9", "#9b59b6", "#f39c12", "#f1c40f", "#e74c3c", "#7f8c8d", "#795548"]);//flatuicolors.com
 
 var dataTitle = function(d){
           var t = idToName[d.id] + ', '+ d.jahr + "<br>" +
@@ -76,7 +77,7 @@ function updateGraph()
       .attr("title", dataTitle)
       .attr("fill-opacity", function(d){
       	if(checkedYears[d.jahr])
-      		return 1;
+      		return 0.8;
       	else
       		return 0; });
   mySVG.select(".x.axis") // change the x axis
@@ -125,7 +126,7 @@ function drawGraph(){
       .data(theData)
     .enter().append("circle")
       .attr("class", "dot")
-      .attr("r", 3.5)
+      .attr("r", 4)
       .attr("cx", xMap)
       .attr("cy", yMap)
       .attr("stroke-opacity", 0)
@@ -152,7 +153,9 @@ function drawGraph(){
       .attr("x", width + 6)
       .attr("width", 18)
       .attr("height", 18)
-      .style("fill", color);
+      .style("fill", color)
+      .attr("stroke-opacity", 0)
+      .style("stroke", "none");
 
   // draw legend text
   legend.append("text")
