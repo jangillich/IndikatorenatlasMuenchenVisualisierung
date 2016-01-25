@@ -127,8 +127,13 @@
                     <ul class="dropdown-menu" id="yDataSelect" aria-labelledby="dropdownMenuYData">
                     </ul>
                 </div>
+                <a onclick="updateScatterplot(yIndex,xIndex)">Achsen vertauschen</a>
                 </div>
-            <div id="corrmat" class="panel panel-default"></div>
+            <div class="panel panel-default" id="corrmat">
+              <div class="panel-heading">Korrelogramm<a id="infolink" class="pull-right" tabindex="0" role="button" data-toggle="popover" data-trigger="focus" data-content="Diese Matrix verdeutlicht den Korrelationskoeffizienten der verschiedenen Datenreihen. Hierbei steht 1 f&uuml;r eine starke positive Korrelation, -1 f&uuml;r eine starke negative Korrelation. Umso n&auml;her der Wert an 0 liegt, umso schw&auml;cher ist die Korrelation."><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></a>
+
+              </div>
+            </div>
 <!--     <div class="panel panel-default">
       <dl class="dl-horizontal">
                     <dt>AA</dt>
@@ -183,6 +188,9 @@
     <script src="scripts/scatterplot.js"></script>
     <script src="scripts/corrmat.js"></script>
     <script src="scripts/ui.js"></script>
+    <script type="text/javascript">
+    $('#infolink').popover();
+    </script>
     <!-- <div id="filter-dropdown" class="dropdown">
                     <a id="filter-toggle" class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" aria-haspopup="true" aria-expanded="true">
       Filter
