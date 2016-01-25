@@ -61,12 +61,11 @@ function updateScatterplot(x,y){
   updateGraph();
   $("#dropdownMenuXData .dropdownLabel").html(fullNames[xIndex]);
   $("#dropdownMenuYData .dropdownLabel").html(fullNames[yIndex]);
+  updateCorrmat();
 }
 
 function updateGraph()
 {
-  //svg.selectAll("*").remove();
-  //drawGraph();
   xScale.domain([d3.min(theData, xValue) * 0.95, d3.max(theData, xValue) * 1.05]);
   yScale.domain([d3.min(theData, yValue) * 0.95, d3.max(theData, yValue) * 1.05]);
   var mySVG = d3.select("#scatterplot").transition();

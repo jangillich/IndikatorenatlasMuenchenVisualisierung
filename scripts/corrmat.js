@@ -1,5 +1,38 @@
 var abbrevs = ['AA', 'EH', 'LE', 'ED', 'AQ', 'DA', 'PD'];
 
+
+
+function updateCorrmat(){
+  var color = d3.scale.linear()
+          .domain([-1, 0, 1])
+          .range(["#c0392b", "#ecf0f1", "#2980b9"]);
+  var cor = d3.select("#corrmat").selectAll(".cor")
+  .filter(function(d){
+          var ypos = names.indexOf(d.y);
+          var xpos = names.indexOf(d.x);
+          for (var i = (ypos + 1); i < names.length; i++){
+            if (i === xpos) return true;
+          }
+          return false;
+        });
+  cor.selectAll("rect")
+  .style("fill", function(d){
+    if (names.indexOf(d.x) === xIndex && names.indexOf(d.y) === yIndex || 
+      names.indexOf(d.x) === yIndex && names.indexOf(d.y) === xIndex)
+      return color(d.value);
+    else
+      return "none";
+  });
+  cor.selectAll("circle")
+  .style("fill", function(d){
+    if (names.indexOf(d.x) === xIndex && names.indexOf(d.y) === yIndex || 
+      names.indexOf(d.x) === yIndex && names.indexOf(d.y) === xIndex)
+      return "white";
+    else
+      return color(d.value);
+  });
+}
+
 d3.csv("preprocessing/results/correlation.csv", function(error, rows) {
       var data = [];
       rows.forEach(function(d) {
@@ -27,10 +60,10 @@ d3.csv("preprocessing/results/correlation.csv", function(error, rows) {
         domain = d3.set(data.map(function(d) {
           return d.x
         })).values(),
-        num = Math.sqrt(data.length),
         color = d3.scale.linear()
           .domain([-1, 0, 1])
           .range(["#c0392b", "#ecf0f1", "#2980b9"]),
+        num = Math.sqrt(data.length),
         radScale = function(d){
           d = d * d;
           var s = d3.scale.linear()
@@ -38,6 +71,7 @@ d3.csv("preprocessing/results/correlation.csv", function(error, rows) {
         .range([0.7, 1]);
         return s(d);
         };
+      
 
       var offsetX = width / (2.0 * domain.length);
       var offsetY = height / (2.0 * domain.length);
@@ -76,6 +110,25 @@ d3.csv("preprocessing/results/correlation.csv", function(error, rows) {
         .attr("height", ySpace)
         .attr("x", -xSpace / 2)
         .attr("y", -ySpace / 2)
+
+
+        var theCor = cor.filter(function(d){
+          var ypos = names.indexOf(d.y);
+          var xpos = names.indexOf(d.x);
+          for (var i = (ypos + 1); i < names.length; i++){
+            if (i === xpos) return true;
+          }
+          return false;
+        });
+        theCor.selectAll("rect")
+        .style("fill", function(d){
+          if (names.indexOf(d.x) === xIndex && names.indexOf(d.y) === yIndex || 
+            names.indexOf(d.x) === yIndex && names.indexOf(d.y) === xIndex)
+            return color(d.value);
+          else
+            return "none";
+        });
+        
 
       cor.filter(function(d){
           var ypos = domain.indexOf(d.y);
@@ -143,6 +196,7 @@ d3.csv("preprocessing/results/correlation.csv", function(error, rows) {
         })
         .on("click", function(d){
           updateScatterplot(names.indexOf(d.x), names.indexOf(d.y))
+          updateCorrmat();
         })
         .on("mouseover", function(d) {
                 this.style.strokeWidth = 3;
@@ -157,7 +211,16 @@ d3.csv("preprocessing/results/correlation.csv", function(error, rows) {
       })
       .on("mouseout", function(d) {
                 this.style.strokeWidth = 0;
-      });;
+      });
+
+      theCor.selectAll("circle")
+        .style("fill", function(d){
+          if (names.indexOf(d.x) === xIndex && names.indexOf(d.y) === yIndex || 
+            names.indexOf(d.x) === yIndex && names.indexOf(d.y) === xIndex)
+            return "white";
+          else
+            return color(d.value);
+        })
         
     var aS = d3.scale
       .linear()
